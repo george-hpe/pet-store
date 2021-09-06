@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package petstorepb;
+
+option go_package = "./petstorepb";
+
+import "petstorepb/google/api/annotations.proto";
+
+// Product defines an item in the pet store.
+message Product {
+    string id = 1;
+    string name = 2;
+    string category = 3;
+    string photo_url = 4 ;
+    enum Status {
+        AVAILABLE = 0;
+        PENDING = 1;
+        SOLD = 2;
+    }
+    Status status = 5;
+}
+
+// AddProductResponse defines newly created product id.
+message AddProductResponse {
+    string id = 1;
+}
+
+// ItemRequest represents store requests.
+message ItemRequest {}
+
+// ItemResponse defines search response.
+message ItemResponse {
+    repeated Product products = 1;
+}
+
+// StoreService defines a set of functionalities related to the pet store.
+service StoreService {
+    rpc AddProduct(Product) returns (AddProductResponse) {
+        option (google.api.http) = {
+            post: "/v1/pet"
+            body: "*"
+        };
+    }
+    rpc ListProduct(ItemRequest) returns (ItemResponse) {
+        option (google.api.http) = {
+            get: "/v1/pets"
+        };
+    }
+}
